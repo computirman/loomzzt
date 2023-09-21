@@ -480,8 +480,12 @@ void zztoopParseDirection(ZZTOOPparser * parser)
 
 	do {
 		index = zztoopFindDirMod(parser->token);
-
-		if (index != -1) {
+		if (index == 5) {
+			zztoopAddWhitespace(parser);
+			zztoopParseDirection(parser);
+                        zztoopAddWhitespace(parser);
+                        zztoopParseDirection(parser);
+		} else if (index != -1) {
 			/* We found a modifier; add it */
 			zztoopAddToken(parser, ZOOPTYPE_DIRMOD, index);
 
@@ -609,12 +613,46 @@ void zztoopParseCommandArgs(ZZTOOPparser * parser, int command)
 				} else if (parser->last->value == ZOOPFLAG_ANY) {
 					zztoopAddWhitespace(parser);
 					zztoopParseKind(parser);
-				}
+				} else if (parser->last->value == ZOOPFLAG_WITHIN) {
+					zztoopAddWhitespace(parser);
+					zztoopAddToken(parser, ZOOPTYPE_NUMBER, 0);
+				} else if (parser->last->value == ZOOPFLAG_COLOR) {
+                                        zztoopAddWhitespace(parser);
+                                        zztoopParseDirection(parser);
+                                } else if (parser->last->value == ZOOPFLAG_AT) {
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_NUMBER, 0);
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_NUMBER, 0);
+                                } else if (parser->last->value == ZOOPFLAG_COLOR) {
+                                        zztoopAddWhitespace(parser);
+                                        zztoopParseDirection(parser);
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_NUMBER, 0);
+                                } else if (parser->last->value == ZOOPFLAG_RUN) {
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_TEXT, 0);
+                                } else if (parser->last->value == ZOOPFLAG_RUNWITH) {
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_TEXT, 0);
+                                } else if (parser->last->value == ZOOPFLAG_DETECT) {
+                                        zztoopAddWhitespace(parser);
+                                        zztoopParseDirection(parser);
+                                        zztoopAddWhitespace(parser);
+                                        zztoopParseKind(parser);
+                                }
 
 				break;
 
 			case ZOOPARG_ITEM:
 				zztoopAddToken(parser, ZOOPTYPE_ITEM, zztoopFindItem(parser->token));
+
+                                if (parser->last->value == 10) {
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_NUMBER, 0);
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_NUMBER, 0);
+                                }
 
 			case ZOOPARG_THENMESSAGE:
 				if (str_equ(parser->token, "then", STREQU_UNCASE)) {
@@ -645,6 +683,14 @@ void zztoopParseCommandArgs(ZZTOOPparser * parser, int command)
 
 			case ZOOPARG_DIRECTION:
 				zztoopParseDirection(parser);
+
+				if (parser->last->value > 15) {
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_NUMBER, 0);
+                                        zztoopAddWhitespace(parser);
+                                        zztoopAddToken(parser, ZOOPTYPE_NUMBER, 0);
+                                }
+
 				break;
 		}
 
@@ -689,7 +735,12 @@ const char * zztoopcommands[ZOOPCOMMANDCOUNT] =
 	"if",      "lock",    "play",   "put",
 	"restart", "restore", "send",   "set",
 	"shoot",   "take",    "throwstar",
-	"try",     "unlock",  "walk",   "zap"
+	"try",     "unlock",  "walk",   "zap",
+	"else", "and", "run", "runwith", "out",
+	"xout", "load", "palette", "player",
+	"quicksave", "quickload", "pset", "edge",
+	"board", "duplicate", "shove", "color",
+	"bgplay", "step", "write"
 };
 
 
@@ -698,41 +749,54 @@ const char * zztoopcommandargs[ZOOPCOMMANDCOUNT] =
 	"k",  "o",   "kk", "n",
 	"f",  "n",   "",   "",
 	"",   "in",  "d",  "",
-	"ft", "",    "s",  "dk",
+	"ft", "d",    "s",  "dk",
 	"",   "m",   "m",  "f",
 	"d",  "int", "d",
-	"dt", "",    "d",  "m"
+	"dt", "d",    "d",  "m",
+	"t", "t", "n", "in", "nnnn",
+	"n", "dn", "nnnn", "nnn",
+	"n", "n", "din", "dn",
+	"n", "dd", "dd", "dnn",
+	"s", "dd", "dnnt"
 };
 
 const char * zztoopmessages[ZOOPMESSAGECOUNT] =
 {
-	"touch", "shot", "bombed", "thud", "energize"
+	"touch", "shot", "bombed", "thud", "energize", "enter"
 };
 
 const char * zztoopflags[ZOOPFLAGCOUNT] =
 {
-	"alligned", "contact", "blocked", "energized", "any"
+	"alligned", "contact", "blocked", "energized", "any", "color", "rnd", "at", "run", "runwith", "within", "detect"
 };
 
 const char * zztoopitems[ZOOPITEMCOUNT] =
 {
-	"ammo", "gems", "torches", "health", "score", "time"
+	"ammo", "gems", "torches", "health", "score", "time",
+	"energized", "wick", "keyspeed", "tickspeed", "random",
+	"bluekey", "greenkey", "cyankey", "redkey", "purplekey", "yellowkey", "whitekey",
+	"arg", "array",
+	"local1", "local2", "local3", "local4", "local5", "local6", "local7",
+	"obj1", "obj2", "obj3", "obj4", "obj5", "obj6"
 };
 
 const char * zztoopcolours[ZOOPCOLOURCOUNT] =
 {
-	"blue", "green", "red", "cyan", "purple", "yellow", "white"
+	"blue", "green", "red", "cyan", "purple", "yellow", "white",
+	"dkblue", "dkgreen", "dkred", "dkcyan", "dkpurple", "brown", "gray",
+	"dkgray", "grey", "dkgrey", "black"
 };
 
 const char * zztoopdirs[ZOOPDIRCOUNT] =
 {
 	"north", "south", "east", "west", "idle",
 	"seek", "flow", "rnd", "rndns", "rndne",
-	"n", "s", "e", "w", "i"
+	"n", "s", "e", "w", "i", "player", "by",
+	"at", "toward", "find"
 };
 
 const char * zztoopdirmods[ZOOPDIRMODCOUNT] =
 {
-	"cw", "ccw", "rndp", "opp"
+	"cw", "ccw", "rndp", "opp", "to"
 };
 

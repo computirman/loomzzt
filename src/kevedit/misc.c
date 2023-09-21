@@ -226,7 +226,12 @@ void plot(keveditor * myeditor)
 
 	/* Change the color to reflect state of default color mode */
 	if (myeditor->defcmode == 0) {
-		pattern.color = encodecolor(myeditor->color);
+                if ((pattern.type < ZZT_CUSTOMTEXT) || ((pattern.type > ZZT_WHITETEXT) && (pattern.type < 127))) {
+                        pattern.color = encodecolor(myeditor->color);
+                } else {
+                        pattern.type = 128 + myeditor->color.fg; 
+                        pattern.type += (myeditor->color.bg % 8) * 16;
+                }
 	}
 
 	zztPlot(myeditor->myworld, myeditor->cursorx, myeditor->cursory, pattern);
@@ -860,7 +865,12 @@ void fillbyselection(keveditor *myeditor, ZZTworld* world, selection fillsel, pa
 	int x = -1, y = 0;
 	ZZTtile pattern = pbuf.patterns[pbuf.pos];
 	if (myeditor->defcmode == 0) {
-		pattern.color = encodecolor(myeditor->color);
+		if ((pattern.type < ZZT_CUSTOMTEXT) || ((pattern.type > ZZT_WHITETEXT) && (pattern.type < 127))) {
+			pattern.color = encodecolor(myeditor->color);
+		} else {
+			pattern.type = 128 + myeditor->color.fg;
+			pattern.type += (myeditor->color.bg % 8) * 16;			
+		}
 	}
 
 	if (randomflag)
@@ -871,7 +881,12 @@ void fillbyselection(keveditor *myeditor, ZZTworld* world, selection fillsel, pa
 		if (randomflag) {
 			pattern = pbuf.patterns[rand() % pbuf.size];
 			if (myeditor->defcmode == 0) {
-				pattern.color = encodecolor(myeditor->color);
+                		if ((pattern.type < ZZT_CUSTOMTEXT) || ((pattern.type > ZZT_WHITETEXT) && (pattern.type < 127))) {
+		                        pattern.color = encodecolor(myeditor->color);
+                		} else {
+		                        pattern.type = 128 + myeditor->color.fg; 
+                		        pattern.type += (myeditor->color.bg % 8) * 16;
+		                }
 			}
 		}
 

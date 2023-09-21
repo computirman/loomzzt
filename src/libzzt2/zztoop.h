@@ -95,13 +95,13 @@ typedef struct ZZTOOPparser {
 
 
 /* Number of built-in values for several types */
-#define ZOOPCOMMANDCOUNT    27
-#define ZOOPMESSAGECOUNT     5
-#define ZOOPFLAGCOUNT        5
-#define ZOOPITEMCOUNT        6
-#define ZOOPCOLOURCOUNT      7
-#define ZOOPDIRCOUNT        15
-#define ZOOPDIRMODCOUNT      4
+#define ZOOPCOMMANDCOUNT   47
+#define ZOOPMESSAGECOUNT    6
+#define ZOOPFLAGCOUNT      12
+#define ZOOPITEMCOUNT      33
+#define ZOOPCOLOURCOUNT    18
+#define ZOOPDIRCOUNT       20
+#define ZOOPDIRMODCOUNT     5
 
 /* Built-in ZZT-OOP commands */
 #define ZOOPCMND_BECOME     0
@@ -132,19 +132,49 @@ typedef struct ZZTOOPparser {
 #define ZOOPCMND_WALK      25
 #define ZOOPCMND_ZAP       26
 
+#define ZOOPCMND_ELSE      27
+#define ZOOPCMND_AND       28
+#define ZOOPCMND_RUN       29
+#define ZOOPCMND_RUNWITH   30
+#define ZOOPCMND_OUT       31
+#define ZOOPCMND_XOUT      32
+#define ZOOPCMND_LOAD      33
+#define ZOOPCMND_PALETTE   34
+#define ZOOPCMND_PLAYER    35
+#define ZOOPCMND_QUICKSAVE 36
+#define ZOOPCMND_QUICKLOAD 37
+#define ZOOPCMND_PSET      38
+#define ZOOPCMND_EDGE      39
+#define ZOOPCMND_BOARD     40
+#define ZOOPCMND_DUPLICATE 41
+#define ZOOPCMND_SHOVE     42
+#define ZOOPCMND_COLOR     43
+#define ZOOPCMND_BGPLAY    44
+#define ZOOPCMND_STEP      45
+#define ZOOPCMND_WRITE     46
+
 /* Values for the TEXT type */
-#define ZOOPTEXT_NORMAL    0
-#define ZOOPTEXT_HEADING   1
-#define ZOOPTEXT_LABEL     2
-#define ZOOPTEXT_HYPERTEXT 3
-#define ZOOPTEXT_MAX       3
+#define ZOOPTEXT_NORMAL     0
+#define ZOOPTEXT_HEADING    1
+#define ZOOPTEXT_LABEL      2
+#define ZOOPTEXT_HYPERTEXT  3
+#define ZOOPTEXT_MAX        3
 
 /* Values for the FLAG type */
-#define ZOOPFLAG_ALLIGNED  0
-#define ZOOPFLAG_CONTACT   1
-#define ZOOPFLAG_BLOCKED   2
-#define ZOOPFLAG_ENERGIZED 3
-#define ZOOPFLAG_ANY       4
+#define ZOOPFLAG_ALLIGNED   0
+#define ZOOPFLAG_CONTACT    1
+#define ZOOPFLAG_BLOCKED    2
+#define ZOOPFLAG_ENERGIZED  3
+#define ZOOPFLAG_ANY        4
+
+#define ZOOPFLAG_COLOR      5
+#define ZOOPFLAG_RND        6
+#define ZOOPFLAG_AT	    7
+#define ZOOPFLAG_RUN	    8
+#define ZOOPFLAG_RUNWITH    9	
+#define ZOOPFLAG_WITHIN	   10
+#define ZOOPFLAG_DETECT	   11
+
 
 /* Command argument syntax:
  * Each type of argument to a command is given a letter and stored

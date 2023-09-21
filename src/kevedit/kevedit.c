@@ -341,44 +341,47 @@ void keveditHandleTextEntry(keveditor * myeditor)
 			}
 		}
 		myeditor->updateflags |= UD_CURSOR;
-	} else if (is_literal_key(key) || key == DKEY_CTRL_A) {
-		/* Insert the current keystroke as text */
-		ZZTtile textTile = { ZZT_BLUETEXT, 0x00, NULL };
+	} else if ((key < 0x80 && key >= 0x20) || key == DKEY_CTRL_A) {
+			/* Insert the current keystroke as text */
+			ZZTtile textTile = { ZZT_CUSTOMTEXT, 0x00, NULL };
 
-		/* Determine the text code based on the FG colour */
-		if (myeditor->color.fg == 0 || myeditor->color.fg == 8 || myeditor->color.fg == 15)
-			textTile.type += 6;
-		else if (myeditor->color.fg > 8)
-			textTile.type += myeditor->color.fg - 9;
-		else
-			textTile.type += myeditor->color.fg - 1;
-
-		/* Determine color based on keypress */
-		textTile.color = key;
-
-		/* ASCII selection dialog */
-		if (key == DKEY_CTRL_A) {
-			textTile.color = charselect(myeditor->mydisplay, -1);
-			myeditor->updateflags |= UD_BOARD;
-		}
-
-		/* Plot the text character */
-		zztPlot(myeditor->myworld, myeditor->cursorx, myeditor->cursory, textTile);
-
-		/* Now move right */
-		if (myeditor->cursorx < myeditor->width - 1) {
-			/* There's room */
-			myeditor->cursorx++;
+                /* Determine the text code based on the FG colour */
+		if (myeditor->defcmode == 1) {
+			if (myeditor->color.fg > 7)
+        	                textTile.type += myeditor->color.fg - 8;
+	                else
+        	                textTile.type += myeditor->color.fg;
 		} else {
-			/* Can't move past the edge of the screen, move down to the
-			 * next line if possible. */
-			if (myeditor->cursory < myeditor->height - 1) {
-				myeditor->cursorx = 0;
-				myeditor->cursory++;
-				myeditor->updateflags |= UD_BOARD;
-			}
+			textTile.type = 128 + myeditor->color.fg;
+			textTile.type += (myeditor->color.bg % 8) * 16;
 		}
-		myeditor->updateflags |= UD_SPOT;
+
+                /* Determine color based on keypress */
+                textTile.color = key;
+
+                /* ASCII selection dialog */
+                if (key == DKEY_CTRL_A) {
+                        textTile.color = charselect(myeditor->mydisplay, -1);
+                        myeditor->updateflags |= UD_BOARD;
+                }
+
+                /* Plot the text character */
+                zztPlot(myeditor->myworld, myeditor->cursorx, myeditor->cursory, textTile);
+
+                /* Now move right */
+                if (myeditor->cursorx < myeditor->width - 1) {
+                        /* There's room */
+                        myeditor->cursorx++;
+                } else {
+                        /* Can't move past the edge of the screen, move down to the
+                         * next line if possible. */
+                        if (myeditor->cursory < myeditor->height - 1) {
+                                myeditor->cursorx = 0;
+                                myeditor->cursory++;
+                                myeditor->updateflags |= UD_BOARD;
+                        }
+                }
+                myeditor->updateflags |= UD_SPOT;
 	} else {
 		/* Key could not be handled, pass it on */
 		myeditor->key = key;

@@ -266,21 +266,17 @@ void _zzt_block_remove_param_from_list(ZZTblock * block, int index)
 /* Determine type/color to use as undertile for a tile */
 ZZTtile _zzt_get_undertile(ZZTtile tile)
 {
-	ZZTtile undertile = { ZZT_EMPTY, 0x0F, NULL };
+        ZZTtile undertile = { ZZT_EMPTY, 0x0F, NULL };
 
-	if (tile.param != NULL) {
-		/* Steal the under type/color from the given tile */
-		undertile.type = tile.param->utype;
-		undertile.color = tile.param->ucolor;
-	} else {
-		if (tile.type == ZZT_EMPTY || tile.type == ZZT_FAKE ||
-				tile.type == ZZT_WATER) {
-			/* Steal the type and color from the given tile itself */
-			undertile = tile;
-		}
-	}
+        if (tile.param != NULL) {
+                /* Steal the under type/color from the given tile */
+                undertile.type = tile.param->utype;
+                undertile.color = tile.param->ucolor;
+        } else {
+                undertile = tile;
+        }
 
-	return undertile;
+        return undertile;
 }
 
 ZZTblock *zztBlockCreate(int width, int height)
@@ -706,9 +702,7 @@ uint8_t _zzt_display_char_line(ZZTblock * block, int x, int y)
 
 uint8_t zztLoneTileGetDisplayChar(ZZTtile tile)
 {
-	if (tile.type > ZZT_BWHITETEXT)
-		return '?';
-	if (tile.type >= ZZT_BLUETEXT)
+	if (tile.type >= ZZT_CUSTOMTEXT)
 		return tile.color;
 
 	switch (tile.type) {
@@ -735,23 +729,28 @@ uint8_t zztLoneTileGetDisplayChar(ZZTtile tile)
 
 uint8_t zztLoneTileGetDisplayColor(ZZTtile tile)
 {
-	switch (tile.type) {
-		case ZZT_EMPTY:  return 0x0F;
-		case ZZT_PLAYER: return tile.param != NULL ? 0x1F : tile.color;
-		case ZZT_BLUETEXT:    return 0x1f;
-		case ZZT_GREENTEXT:   return 0x2f;
-		case ZZT_CYANTEXT:    return 0x3f;
-		case ZZT_REDTEXT:     return 0x4f;
-		case ZZT_PURPLETEXT:  return 0x5f;
-		case ZZT_YELLOWTEXT:  return 0x6f;
-		case ZZT_WHITETEXT:   return 0x0f;
-		case ZZT_BBLUETEXT:   return 0x9f;
-		case ZZT_BGREENTEXT:  return 0xaf;
-		case ZZT_BCYANTEXT:   return 0xbf;
-		case ZZT_BREDTEXT:    return 0xcf;
-		case ZZT_BPURPLETEXT: return 0xdf;
-		case ZZT_BYELLOWTEXT: return 0xef;
-		case ZZT_BWHITETEXT:  return 0xff;
+	if (tile.type > 127) {
+		return tile.type - 128;
+	} else {
+		switch (tile.type) {
+			case ZZT_EMPTY:  return 0x0F;
+			case ZZT_PLAYER: return tile.param != NULL ? 0x1F : tile.color;
+			case ZZT_CUSTOMTEXT:  return 0x08;
+			case ZZT_BLUETEXT:    return 0x1f;
+			case ZZT_GREENTEXT:   return 0x2f;
+			case ZZT_CYANTEXT:    return 0x3f;
+			case ZZT_REDTEXT:     return 0x4f;
+			case ZZT_PURPLETEXT:  return 0x5f;
+			case ZZT_YELLOWTEXT:  return 0x6f;
+			case ZZT_WHITETEXT:   return 0x0f;
+			case ZZT_BBLUETEXT:   return 0x9f;
+			case ZZT_BGREENTEXT:  return 0xaf;
+			case ZZT_BCYANTEXT:   return 0xbf;
+			case ZZT_BREDTEXT:    return 0xcf;
+			case ZZT_BPURPLETEXT: return 0xdf;
+			case ZZT_BYELLOWTEXT: return 0xef;
+			case ZZT_BWHITETEXT:  return 0xff;
+		}
 	}
 
 	/* Return the color by default */

@@ -33,6 +33,8 @@
 
 #include "kevedit.h"
 #include "display/display.h"
+#include "display/charset.h"
+#include "display/palette.h"
 #include "libzzt2/zzt.h"
 
 #include "help/help.h"
@@ -153,6 +155,24 @@ ZZTworld * getWorldFromArg(char * arg, char * datapath)
 		/* Maybe they left off the .zzt extension? */
 		strcat(buffer, ".zzt");
 		myworld = zztWorldLoad(buffer);
+	} else {
+	/* try to load the PAL and CHR files */
+		buffer[buflen - 7] = 'c';
+		buffer[buflen - 6] = 'h';
+		buffer[buflen - 5] = 'r';
+		charset *mycharset = charset_load(buffer);
+		if (mycharset) {
+			editor->char_set = mycharset;
+			mydisplay->set_charset(mycharset);
+			buffer[buflen - 7] = 'p';
+			buffer[buflen - 6] = 'a';
+			buffer[buflen - 5] = 'l';
+			palette *mypalette = palette_load(path);
+			if (mypalette) {
+				editor->palette = mypalette;
+				mydisplay->set_palette(mypalette);
+			}
+		}
 	}
 
 	if (myworld == NULL) {
