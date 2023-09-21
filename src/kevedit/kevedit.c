@@ -248,6 +248,10 @@ void keveditHandleSelection(keveditor * myeditor)
 	/* Except for shift + ASCII key */
 	if (is_literal_key(myeditor->key) || myeditor->key == DKEY_SHIFT_TAB)
 		selectblockflag = 0;
+	
+	/* Or if text draw mode is on */
+	if (myeditor->textentrymode == 1)
+		selectblockflag = 0;
 
 	if (selectblockflag && myeditor->selectmode != SELECT_BLOCK) {
 		/* Begin block selection */
