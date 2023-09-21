@@ -467,7 +467,7 @@ void updatepanel(keveditor * e)
 		}
 
 		if (uf & (UD_WORLDTITLE & ~UD_PANEL_TOP)) {
-			strcpy(s, "KevEdit - ");
+			strcpy(s, "LOOMzzt - ");
 			strncpy(&s[10], title, 244);
 			d->titlebar(s);
 		}
@@ -484,6 +484,12 @@ void updatepanel(keveditor * e)
 			/* Regular title */
 			d->print(71, 1, 0x17, title);
 		}
+		d->putch_discrete(61, 1, 'L', 0x1d);
+                d->putch_discrete(62, 1, 'O', 0x1e);
+                d->putch_discrete(63, 1, 'O', 0x1b);
+		d->putch_discrete(64, 1, 'M', 0x1c);
+		d->putch_discrete(65, 1, 'z', 0x1f);
+		d->putch_discrete(66, 1, 'z', 0x1f);
 
 	}
 

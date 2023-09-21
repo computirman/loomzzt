@@ -38,7 +38,7 @@ extern "C" {
 /* Board title size */
 #define ZZT_BOARD_TITLE_SIZE	50
 /* Maximum params for a board */
-#define ZZT_BOARD_MAX_PARAMS 151
+#define ZZT_BOARD_MAX_PARAMS 252
 /* World title size */
 #define ZZT_WORLD_TITLE_SIZE	20
 /* Flag size */
@@ -584,6 +584,7 @@ extern const char * _zzt_type_kind_table[];
 #define ZZT_CENTHEAD      0x2C
 #define ZZT_CENTBODY      0x2D
 
+#define ZZT_CUSTOMTEXT    0x2E
 #define ZZT_BLUETEXT      0x2F
 #define ZZT_GREENTEXT     0x30
 #define ZZT_CYANTEXT      0x31
